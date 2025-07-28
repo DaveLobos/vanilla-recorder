@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     })();
 
-    return () => navigator.mediaDevices.getUserMedia({video:true})
+    return () => navigator.mediaDevices.getUserMedia({video:true, audio:true})
       .then(stream => {
         const mediaRecorder = new MediaRecorder(stream);
         const cleanExit = () => {

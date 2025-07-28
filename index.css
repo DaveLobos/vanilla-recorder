@@ -95,12 +95,7 @@ body {
             }
 
             & > button[data-action="record"] {
-                &.start {
-                    background-color:var(--greenish);
-                }
-                &.stop {
-                    background-color:var(--redish);
-                }
+                background-color:var(--greenish);
                 width:512px;
                 font-weight:700;
                 display:grid;
@@ -110,6 +105,10 @@ body {
                 padding:0.75em;
                 border-radius:0.25em;
                 justify-self:center;
+
+                &.stop {
+                    background-color:var(--redish);
+                }
             }
         }
     }

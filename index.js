@@ -24,27 +24,45 @@ document.addEventListener('DOMContentLoaded', () => {
   const sectionRecorder = (() => {
     let chunks = [];
     const onData = e => chunks.push(e.data);
-    const onStop = () => {
-      if(chunks.length > 0){
-        videos.push([`My video ${(new Date()).toTimeString().slice(0, 8)}`, new Blob(chunks)]);
-        chunks = [];
-      }
-    };
-
     const videoTag = sections.recorder.querySelector("video");
     const backButton = sections.recorder.querySelector('[data-action="back"]');
     const recordButton = sections.recorder.querySelector('[data-action="record"]');
 
-    return () => navigator.mediaDevices.getUserMedia({video:true, audio:true})
+    const counter = (() => {
+      let tout = 0;
+      let started = 0;
+
+      const pad = n => `${n > 10 ? "" : "0"}${n}`;
+
+      const update = () => {
+        const ellapsed = Math.floor((Date.now() - started) / 1000);
+        recordButton.innerHTML = `Stop | ${pad(Math.floor(ellapsed / 60))}:${pad(ellapsed % 60)}`;
+      };
+
+      return {
+        start(){
+          clearInterval(tout);
+          started = Date.now();
+          recordButton.setAttribute("class", "stop");
+          tout = setInterval(update, 250);
+        },
+        stop(){
+          clearInterval(tout);
+          recordButton.removeAttribute("class");
+          recordButton.innerHTML = "Start recording";
+        }
+      };
+    })();
+
+    return () => navigator.mediaDevices.getUserMedia({video:true})
       .then(stream => {
         const mediaRecorder = new MediaRecorder(stream);
-        const cleanUpAndBack = () => {
+        const cleanExit = () => {
           videoTag.pause();
-          mediaRecorder.stop();
-          mediaRecorder.removeEventListener('dataavailable', onData);
-          mediaRecorder.removeEventListener('stop', onStop);
-          stream.getTracks().forEach(t => t.stop());
           videoTag.srcObject = null;
+          mediaRecorder.ondataavailable = null;
+          mediaRecorder.onstop = null;
+          stream.getTracks().forEach(t => t.stop());
           backButton.onclick = null;
           recordButton.onclick = null;
           sectionList();
@@ -52,26 +70,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         displaySection("recorder");
 
-        mediaRecorder.addEventListener('dataavailable', onData);
-        mediaRecorder.addEventListener('stop', onStop);
+        mediaRecorder.ondataavailable = onData;
+        mediaRecorder.onstop = () => {
+          if(chunks.length > 0){
+            videos.push([`My video ${(new Date()).toTimeString().slice(0, 8)}`, new Blob(chunks)]);
+            chunks = [];
+            if(!confirm("Video has been saved.\nContinue recording?")){
+              cleanExit();
+            }
+          }
+        };
 
         recordButton.onclick = ({target}) => {
           if(mediaRecorder.state === "recording"){
             mediaRecorder.stop();
-            target.setAttribute("class", "start");
-            target.innerHTML = "start recording";
-            alert("Video has been saved.");
-            // if(!confirm("Video has been saved.\nContinue recording?")){
-            //   cleanUpAndBack();
-            // }
+            counter.stop();
           }else{
             mediaRecorder.start();
-            target.setAttribute("class", "stop");
-            target.innerHTML = "stop recording";
+            counter.start();
           }
         };
 
-        backButton.onclick = cleanUpAndBack;
+        backButton.onclick = () => {
+          if(mediaRecorder.state === "recording"){
+            alert("Recording is in progress.");
+          }else{
+            cleanExit();
+          }
+        };
 
         videoTag.muted = true;
         videoTag.srcObject = stream;
@@ -150,6 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
       videoTag.src = URL.createObjectURL(blob);
     };
   })();
+
+  window.addEventListener("beforeunload", e => {
+    if(videos.length > 0){
+      e.preventDefault();
+      e.returnValue = "";
+    }
+  });
 
   sectionList();
 });

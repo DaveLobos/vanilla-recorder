@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const backButton = sections.recorder.querySelector('[data-action="back"]');
     const recordButton = sections.recorder.querySelector('[data-action="record"]');
 
-    return () => navigator.mediaDevices.getUserMedia({video:true})
+    return () => navigator.mediaDevices.getUserMedia({video:true, audio:true})
       .then(stream => {
         const mediaRecorder = new MediaRecorder(stream);
         const cleanUpAndBack = () => {
@@ -130,8 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `
         )).join("");
       }else{
-        list.setAttribute("class", "empty");
-        ul.innerHTML = "";
+        ul.innerHTML = "<li>No videos yet, click the button below to record one.</li>";
       }
     };
   })();
@@ -152,4 +151,5 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   })();
 
+  sectionList();
 });

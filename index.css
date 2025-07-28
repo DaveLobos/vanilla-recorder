@@ -19,6 +19,7 @@ body {
     & > h1 {
         margin:0;
         padding:0.5em;
+        box-sizing:border-box;
         background-color:hsl(240, 40%, 8%);
         border-bottom:1px solid hsl(240, 40%, 20%);
         text-align:center;
@@ -26,8 +27,9 @@ body {
 
     & > section {
         display:none;
-        max-width:800px;
-        padding:1rem;
+        max-width:784px;
+        padding:0.5rem;
+        box-sizing:border-box;
         margin:auto;
 
         &[data-current] {
@@ -80,6 +82,7 @@ body {
 
         &:is([data-name="recorder"], [data-name="player"]) {
             grid-gap:0.75em;
+            justify-content:center;
 
             & > button[data-action="back"] {
                 justify-self:end;
@@ -92,11 +95,12 @@ body {
 
             & > video {
                 justify-self:center;
+                width:256px;
+                aspect-ratio:16/9;
             }
 
             & > button[data-action="record"] {
                 background-color:var(--greenish);
-                width:512px;
                 font-weight:700;
                 display:grid;
                 justify-content:center;
@@ -104,12 +108,35 @@ body {
                 box-sizing:border-box;
                 padding:0.75em;
                 border-radius:0.25em;
-                justify-self:center;
 
                 &.stop {
                     background-color:var(--redish);
                 }
             }
         }
+    }
+}
+
+@media all and (min-width:400px) {
+    body > section:is([data-name="recorder"], [data-name="player"]) > video {
+        width:384px;
+    }
+}
+
+@media all and (min-width:528px) {
+    body > section:is([data-name="recorder"], [data-name="player"]) > video {
+        width:512px;
+    }
+}
+
+@media all and (min-width:656px) {
+    body > section:is([data-name="recorder"], [data-name="player"]) > video {
+        width:640px;
+    }
+}
+
+@media all and (min-width:784px) {
+    body > section:is([data-name="recorder"], [data-name="player"]) > video {
+        width:768px;
     }
 }

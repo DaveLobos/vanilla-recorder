@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if(chunks.length > 0){
             videos.push([`My video ${(new Date()).toTimeString().slice(0, 8)}`, new Blob(chunks)]);
             chunks = [];
-            if(!confirm("Video has been saved.\nContinue recording?")){
+            if(!confirm("Video has been saved.\n\nContinue recording?")){
               cleanExit();
             }
           }

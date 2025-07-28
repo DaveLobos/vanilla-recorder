@@ -1,0 +1,116 @@
+html {
+    font-size:16px;
+    font-family:"Inter", sans-serif;
+
+    --redish:hsl(0, 50%, 40%);
+    --greenish:hsl(120, 45%, 30%);
+    --blueish:hsl(240, 30%, 20%);
+}
+
+button {
+    all:unset;
+}
+
+body {
+    color:#eee;
+    background-color:hsl(240, 40%, 10%);
+    margin:0;
+
+    & > h1 {
+        margin:0;
+        padding:0.5em;
+        background-color:hsl(240, 40%, 8%);
+        border-bottom:1px solid hsl(240, 40%, 20%);
+        text-align:center;
+    }
+
+    & > section {
+        display:none;
+        max-width:800px;
+        padding:1rem;
+        margin:auto;
+
+        &[data-current] {
+            display:grid;
+        }
+
+        &[data-name="list"] {
+            grid-auto-rows:max-content;
+            grid-gap:1rem;
+
+            & > ul {
+                all:unset;
+                display:grid;
+                grid-auto-rows:max-content;
+                grid-gap:0.75em;
+
+                & > li {
+                    all:unset;
+                    background-color:var(--blueish);
+                    padding:0.75em;
+                    border-radius:0.25em;
+                    display:grid;
+                    grid-template-columns:1fr repeat(3, max-content);
+                    grid-gap:0.5em;
+                    align-items:center;
+
+                    & > button {
+                        justify-self:end;
+                        padding:0.25em 0.75em;
+                        border-radius:0.125em;
+                        background-color:var(--greenish);
+
+                        &[data-action="delete"] {
+                            background-color:var(--redish);
+                        }
+                    }
+                }
+            }
+
+            & > button {
+                background-color:var(--greenish);
+                font-weight:700;
+                display:grid;
+                justify-content:center;
+                white-space:nowrap;
+                padding:0.75em;
+                border-radius:0.25em;
+            }
+        }
+
+        &:is([data-name="recorder"], [data-name="player"]) {
+            grid-gap:0.75em;
+
+            & > button[data-action="back"] {
+                justify-self:end;
+                cursor:pointer;
+                padding:0.25em 1.25em;
+                border-radius:0.125em;
+                color:hsl(240, 70%, 80%);
+                background-color:hsl(240, 40%, 20%);
+            }
+
+            & > video {
+                justify-self:center;
+            }
+
+            & > button[data-action="record"] {
+                &.start {
+                    background-color:var(--greenish);
+                }
+                &.stop {
+                    background-color:var(--redish);
+                }
+                width:512px;
+                font-weight:700;
+                display:grid;
+                justify-content:center;
+                white-space:nowrap;
+                box-sizing:border-box;
+                padding:0.75em;
+                border-radius:0.25em;
+                justify-self:center;
+            }
+        }
+    }
+}

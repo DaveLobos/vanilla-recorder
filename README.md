@@ -2,6 +2,8 @@
 
 A simple web-based video recorder application built with HTML, CSS, and JavaScript.
 
+Demo: <https://codepen.io/davelobos/pen/qEOqqXR>
+
 ## Features
 
 *   **Record Videos:** Record videos using your webcam and microphone.
